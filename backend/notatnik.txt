@@ -1,0 +1,11 @@
+dodac w users role
+dodac token
+token przechowuje role
+spiac to wszytstko zeby dzialalo :)
+
+
+
+
+
+cd C:\Users\Mega\Desktop\NPZ\backend
+for /r %f in (*) do type "%f"

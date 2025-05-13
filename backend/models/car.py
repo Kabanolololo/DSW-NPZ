@@ -12,6 +12,8 @@ class Car(Base):
     color = Column(String, nullable=False)
     price_per_day = Column(Integer, nullable=False)
     availability = Column(String, default="available")
+    # dodac role
+    # pozniej dodac zdjecie
 
     # Relacje
     reservations = relationship("Reservation", back_populates="car")
