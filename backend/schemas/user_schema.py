@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field
-from typing import Optional
+from typing import Optional, Literal
 from datetime import datetime
 
 # Schemat do tworzenia nowego użytkownika
@@ -26,7 +26,10 @@ class UserUpdate(BaseModel):
 
     class Config:
         orm_mode = True
-
+        
+# Schemat do aktualizacji istniejącego użytkownika dla administratora
+class AdminUserUpdate(UserUpdate):
+    role: Optional[Literal['user', 'admin']]
 
 # Schemat do odpowiedzi użytkownika
 class UserResponse(BaseModel):
@@ -36,6 +39,7 @@ class UserResponse(BaseModel):
     email: EmailStr = Field(..., example="john.doe@example.com")
     address: str = Field(..., example="123 Main Street")
     city: str = Field(..., example="New York")
+    role: str = Field(..., example="user")  # ← DODANE pole
     created_at: datetime = Field(..., example="2025-05-13T15:30:00")
 
     class Config:

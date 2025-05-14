@@ -14,6 +14,7 @@ class User(Base):
     city = Column(String, nullable=False)
     hashed_password = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
+    role = Column(String, nullable=False)
 
     # Relacje
     reservations = relationship("Reservation", back_populates="user")
