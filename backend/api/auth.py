@@ -15,4 +15,4 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
     return result
 
 # Endpoint do wylogowania
-# Usuwamy klucz api po stronie uzytkownika - frontend
+# Usuwamy jwt po stronie uzytkownika - frontend

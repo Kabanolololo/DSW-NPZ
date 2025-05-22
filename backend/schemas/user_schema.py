@@ -14,7 +14,6 @@ class UserCreate(BaseModel):
     class Config:
         orm_mode = True
 
-
 # Schemat do aktualizacji istniejącego użytkownika
 class UserUpdate(BaseModel):
     name: Optional[str] = Field(None, example="Johnny")

@@ -5,3 +5,4 @@ psycopg2==2.9.6
 pydantic==2.0.3
 passlib[bcrypt]==1.7.4
 pyjwt
+emailstr
