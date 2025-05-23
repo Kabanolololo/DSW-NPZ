@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:admin@localhost:5432/cars")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:Disney2002.@localhost:5432/rental_cars")
 
 # Tworzenie silnika połączenia z bazą danych
 engine = create_engine(DATABASE_URL)

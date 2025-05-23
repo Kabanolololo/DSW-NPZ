@@ -1,4 +1,25 @@
-admin123@example.com
-SecurePass123!
+ADMIN
+{
+  "email": "pawel1@example.com",
+  "password": "SecurePass123!"
+}
 
-admin wyzej
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJwYXdlbDFAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NDgyMDY2MTYsIm5vbmNlIjoiM2RTS1FxM3EifQ.IIq8lAeZAt8BrlEdZk0frQsEApACRryilRt3IemRH58
+
+ZWYKLY UZYTKOWNIK
+
+{
+  "email": "pawel0@example.com",
+  "password": "SecurePass123!"
+}
+15 id
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJwYXdlbDBAZXhhbXBsZS5jb20iLCJyb2xlIjoidXNlciIsImV4cCI6MTc0ODIwODE1NSwibm9uY2UiOiJza2tNQTFRcSJ9.tD6fuIROsapnDrY6ep0owmtEoAXIxfGOKU_OH9pnMU4
+
+{
+  "email": "john1.doe@example.com",
+  "password": "SecurePass123!"
+}
+14 id
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb2huMS5kb2VAZXhhbXBsZS5jb20iLCJyb2xlIjoidXNlciIsImV4cCI6MTc0ODIwODE2Mywibm9uY2UiOiJ1ZUZVWjBvMSJ9.jMnab2PpoAUANBy_YnZhIRt1F0gsHcTnsOz1Co-xsaQ

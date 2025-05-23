@@ -38,7 +38,7 @@ class UserResponse(BaseModel):
     email: EmailStr = Field(..., example="john.doe@example.com")
     address: str = Field(..., example="123 Main Street")
     city: str = Field(..., example="New York")
-    role: str = Field(..., example="user")  # ← DODANE pole
+    role: str = Field(..., example="user")
     created_at: datetime = Field(..., example="2025-05-13T15:30:00")
 
     class Config:

@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from schemas.car_schema import Car, CarCreate, CarUpdate
 from crud.cars_crud import get_all_cars, get_car_by_id, create_car, update_car, delete_car
 from api.dependencies import get_db
+from utils.jwt import get_current_user
 
 router = APIRouter()
 
@@ -25,13 +26,42 @@ def read_car(car_id: int, db: Session = Depends(get_db)):
 
 # Endpoint do tworzenia nowego samochodu (tylko dla adminów)
 @router.post("/admin", status_code=status.HTTP_201_CREATED)
-def create_new_car(car: CarCreate, db: Session = Depends(get_db)):
+def create_new_car(
+    car: CarCreate, 
+    db: Session = Depends(get_db),
+    token: str = Query(..., description="JWT token to authenticate user")
+    ):
+    
+    current_user_data = get_current_user(token)
+    current_role = current_user_data.get("role")
+
+    if current_role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Insufficient permissions."
+        )
+
     create_car(db, car)
     return {"message": "Car created successfully"}
 
 # Endpoint do edycji istniejącego samochodu (tylko dla adminów)
 @router.put("/admin/{car_id}", response_model=Car)
-def update_existing_car(car_id: int, car: CarUpdate, db: Session = Depends(get_db)):
+def update_existing_car(
+    car_id: int,
+    car: CarUpdate,
+    db: Session = Depends(get_db),
+    token: str = Query(..., description="JWT token to authenticate user")
+    ):
+    
+    current_user_data = get_current_user(token)
+    current_role = current_user_data.get("role")
+
+    if current_role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Insufficient permissions."
+        )
+
     updated_car = update_car(db, car_id, car)
     if not updated_car:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Car not found")
@@ -39,7 +69,21 @@ def update_existing_car(car_id: int, car: CarUpdate, db: Session = Depends(get_d
 
 # Endpoint do usuwania istniejącego samochodu (tylko dla adminów)
 @router.delete("/admin/{car_id}")
-def delete_existing_car(car_id: int, db: Session = Depends(get_db)):
+def delete_existing_car(
+    car_id: int, 
+    db: Session = Depends(get_db),
+    token: str = Query(..., description="JWT token to authenticate user")
+    ):
+    
+    current_user_data = get_current_user(token)
+    current_role = current_user_data.get("role")
+
+    if current_role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Insufficient permissions."
+        )
+        
     success = delete_car(db, car_id)
     if not success:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Car not found")

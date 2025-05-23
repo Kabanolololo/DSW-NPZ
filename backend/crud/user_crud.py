@@ -16,7 +16,7 @@ def create_user(db: Session, user_data: UserCreate) -> User:
             city=user_data.city,
             hashed_password=hash_password(user_data.password),
             created_at=datetime.utcnow(),
-            role="admin"
+            role="user"
         )
         db.add(new_user)
         db.commit()
@@ -31,6 +31,11 @@ def update_user(db: Session, user_id: int, user_data: UserUpdate) -> User:
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise ValueError("User not found.")
+
+    if user_data.email and user_data.email != user.email:
+        existing_user = db.query(User).filter(User.email == user_data.email).first()
+        if existing_user:
+            raise ValueError("This email is already registered.")
 
     if user_data.name:
         user.name = user_data.name
@@ -72,7 +77,7 @@ def greet_user(db: Session, user_id: int) -> str:
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise ValueError("User not found.")
-    return f"Witaj, {user.name}!"
+    return f"Hello, {user.name}!"
 
 # Funkcja aktualizująca istniejącego użytkownika dla administratora
 def admin_update_user(db: Session, user_id: int, user_data: AdminUserUpdate) -> User:
@@ -94,7 +99,7 @@ def admin_update_user(db: Session, user_id: int, user_data: AdminUserUpdate) -> 
         user.hashed_password = hash_password(user_data.password)
     
     if user_data.role:
-        user.role = user_data.role  # Typ `Literal` już waliduje poprawność
+        user.role = user_data.role
 
     db.commit()
     db.refresh(user)

@@ -15,3 +15,13 @@ class TokenResponse(BaseModel):
 
     class Config:
         orm_mode = True
+
+# Schemat do wyswietelnia danych podczas logowania        
+class UserOut(BaseModel):
+    id: int
+    email: EmailStr
+    name: str
+    role: str
+
+    class Config:
+            from_attributes = True 

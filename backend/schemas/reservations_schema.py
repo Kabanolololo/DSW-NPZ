@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional
 
@@ -8,15 +8,6 @@ class ReservationBase(BaseModel):
     car_id: int = Field(..., example=2)
     start_date: datetime = Field(..., example="2025-06-01T10:00:00")
     end_date: datetime = Field(..., example="2025-06-05T10:00:00")
-
-    @validator("end_date")
-    def validate_dates(cls, end_date, values):
-        start_date = values.get("start_date")
-        if start_date and end_date <= start_date:
-            raise ValueError("End date must be after start date.")
-        if end_date < datetime.now():
-            raise ValueError("End date cannot be in the past.")
-        return end_date
 
 # Schemat do tworzenia nowej rezerwacji
 class ReservationCreate(ReservationBase):

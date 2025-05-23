@@ -10,7 +10,6 @@ class Reservation(Base):
     car_id = Column(Integer, ForeignKey("cars.id"), nullable=False)
     start_date = Column(DateTime, nullable=False)
     end_date = Column(DateTime, nullable=False)
-    status = Column(String, default="active")
 
     # Relacje
     user = relationship("User", back_populates="reservations")

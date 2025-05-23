@@ -1,3 +1,5 @@
+import random
+import string 
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from typing import Optional
@@ -6,18 +8,19 @@ from pydantic import EmailStr
 
 SECRET_KEY = "mysecretkey"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30  # 30 min
+ACCESS_TOKEN_EXPIRE_MINUTES = 3600 # 24h
 
 # Funkcja do generowania tokenu
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
 
-    if expires_delta:
-        expire = datetime.utcnow() + expires_delta
-    else:
-        expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
 
-    to_encode.update({"exp": expire})  # Dodanie daty wygaśnięcia tokenu
+    nonce = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+    to_encode.update({
+        "exp": expire,
+        "nonce": nonce
+    })
 
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt

@@ -17,7 +17,10 @@ router = APIRouter()
 
 # Endpoint do tworzenia nowego użytkownika
 @router.post("/", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
-def create_new_user(user: UserCreate, db: Session = Depends(get_db)):
+def create_new_user(
+    user: UserCreate, 
+    db: Session = Depends(get_db)
+    ):
     try:
         new_user = create_user(db=db, user_data=user)
         return new_user
@@ -43,7 +46,7 @@ def update_current_user(
     if current_role != "admin" and current_user_email != db.query(User).filter(User.id == user_id).first().email:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="You do not have permission to update this user's data"
+            detail="You do not have permission to do that"
         )
 
     updated_user = update_user(db=db, user_id=user_id, user_data=user)
@@ -97,7 +100,7 @@ def read_users(
     if current_role != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only admins can access the list of users."
+            detail="Insufficient permissions."
         )
 
     users = get_users(db=db, skip=skip, limit=limit)
@@ -118,7 +121,7 @@ def update_user_by_admin(
     if current_role != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only admins can access the list of users."
+            detail="Insufficient permissions."
         )
     try:
         updated_user = admin_update_user(db=db, user_id=user_id, user_data=user_data)

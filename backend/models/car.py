@@ -11,7 +11,7 @@ class Car(Base):
     year = Column(Integer, nullable=False)
     color = Column(String, nullable=False)
     price_per_day = Column(Integer, nullable=False)
-    availability = Column(String, default="available", nullable=False)
+    availability = Column(String, default="available")
     # pozniej dodac zdjecie
 
     # Relacje
