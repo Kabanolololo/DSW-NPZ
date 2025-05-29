@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, ConfigDict
 from typing import Optional, Literal
 from datetime import datetime
 
@@ -11,9 +11,6 @@ class UserCreate(BaseModel):
     city: str = Field(..., example="New York")
     password: str = Field(..., example="SecurePass123!")
 
-    class Config:
-        orm_mode = True
-
 # Schemat do aktualizacji istniejącego użytkownika
 class UserUpdate(BaseModel):
     name: Optional[str] = Field(None, example="Johnny")
@@ -23,9 +20,6 @@ class UserUpdate(BaseModel):
     city: Optional[str] = Field(None, example="Los Angeles")
     password: Optional[str] = Field(None, example="NewSecurePass456!")
 
-    class Config:
-        orm_mode = True
-        
 # Schemat do aktualizacji istniejącego użytkownika dla administratora
 class AdminUserUpdate(UserUpdate):
     role: Optional[Literal['user', 'admin']]
@@ -41,5 +35,4 @@ class UserResponse(BaseModel):
     role: str = Field(..., example="user")
     created_at: datetime = Field(..., example="2025-05-13T15:30:00")
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

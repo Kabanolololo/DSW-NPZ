@@ -1,47 +1,42 @@
-import random
-import string 
 from jose import JWTError, jwt
-from datetime import datetime, timedelta
+from fastapi import HTTPException, status, Depends, Query
+from sqlalchemy.orm import Session
+from models.user import User
+from api.dependencies import get_db
 from typing import Optional
-from fastapi import HTTPException, status
-from pydantic import EmailStr
+from datetime import datetime, timedelta
+import random
+import string
 
+# Stałe JWT
 SECRET_KEY = "mysecretkey"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 3600 # 24h
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
 
-# Funkcja do generowania tokenu
+# Tworzenie tokenu
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
-
     expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
-
     nonce = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
-    to_encode.update({
-        "exp": expire,
-        "nonce": nonce
-    })
+    to_encode.update({"exp": expire, "nonce": nonce})
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
-
-# Funkcja do weryfikacji tokenu i zwrócenia roli użytkownika
-def get_current_user(token: str) -> dict:
+# Pobieranie użytkownika na podstawie tokenu
+def get_current_user(
+    token: str = Query(..., description="JWT token w query stringu"),
+    db: Session = Depends(get_db)
+) -> User:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = payload.get("sub")
-        role: str = payload.get("role")
-        
-        if email is None or role is None:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid token"
-            )
-        
-        return {"email": email, "role": role}  # Zwracamy dane użytkownika i jego rolę
+        if email is None:
+            raise HTTPException(status_code=401, detail="Nieprawidłowy token")
+
+        user = db.query(User).filter(User.email == email).first()
+        if user is None:
+            raise HTTPException(status_code=404, detail="Użytkownik nie znaleziony")
+
+        return user
 
     except JWTError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token"
-        )
+        raise HTTPException(status_code=401, detail="Nieprawidłowy token")

@@ -128,3 +128,5 @@ def update_user_by_admin(
         return updated_user
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
+    
+    

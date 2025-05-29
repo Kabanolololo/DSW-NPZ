@@ -1,0 +1,9 @@
+.profile-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.profile-content {
+  flex: 1;
+  padding: 2rem;
+}
