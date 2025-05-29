@@ -23,12 +23,11 @@ class CarUpdate(BaseModel):
     price_per_day: Optional[float] = Field(None, example=100)
     availability: Optional[str] = Field(None, example="available")
 
-# Schemat pełnego samochodu zwracanego z API
-class Car(CarBase):
+# Schemat pełnego samochodu do odpowiedzi
+class CarResponse(CarBase):
     id: int
-
     model_config = ConfigDict(from_attributes=True)
 
-# Schemat listy samochodów
+# Schemat listy samochodów (jeśli potrzebny)
 class CarListSchema(BaseModel):
-    cars: List[Car]
+    cars: List[CarResponse]

@@ -104,3 +104,16 @@ export async function getReservationsByUser(token) {
   return res.json();
 }
 
+
+export async function deleteReservation(id, userId, token) {
+  const res = await fetch(`http://localhost:8000/reservations/${id}?user_id=${userId}&token=${token}`, {
+    method: 'DELETE',
+  });
+
+  if (!res.ok) {
+    throw new Error('Nie udało się usunąć rezerwacji');
+  }
+
+  return await res.json();
+}
+

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
-from schemas.car_schema import Car, CarCreate, CarUpdate
+from typing import List
+from schemas.car_schema import CarResponse, CarCreate, CarUpdate
 from crud.cars_crud import get_all_cars, get_car_by_id, create_car, update_car, delete_car
 from api.dependencies import get_db
 from utils.jwt import get_current_user
@@ -10,11 +11,11 @@ router = APIRouter()
 
 ################### Endpointy dla wszystkich użytkowników ###################
 
-@router.get("/", response_model=list[Car])
+@router.get("/", response_model=List[CarResponse])
 def read_all_cars(db: Session = Depends(get_db)):
     return get_all_cars(db)
 
-@router.get("/{car_id}", response_model=Car)
+@router.get("/{car_id}", response_model=CarResponse)
 def read_car(car_id: int, db: Session = Depends(get_db)):
     car = get_car_by_id(db, car_id)
     if not car:
@@ -23,7 +24,7 @@ def read_car(car_id: int, db: Session = Depends(get_db)):
 
 ################### Endpointy dla administratorów ###################
 
-@router.post("/admin", response_model=Car, status_code=status.HTTP_201_CREATED)
+@router.post("/admin", response_model=CarResponse, status_code=status.HTTP_201_CREATED)
 def create_new_car(
     car: CarCreate,
     token: str = Query(..., description="JWT token"),
@@ -41,7 +42,7 @@ def create_new_car(
 
     return new_car
 
-@router.put("/admin/{car_id}", response_model=Car)
+@router.put("/admin/{car_id}", response_model=CarResponse)
 def update_existing_car(
     car_id: int,
     car: CarUpdate,
@@ -50,7 +51,7 @@ def update_existing_car(
 ):
     current_user_data = get_current_user(token=token, db=db)
 
-    if current_user_data.get("role") != "admin":
+    if current_user_data.role != "admin":
         raise HTTPException(status_code=403, detail="Nie masz uprawnień do edycji.")
 
     updated_car = update_car(db, car_id, car)
@@ -66,7 +67,7 @@ def delete_existing_car(
 ):
     current_user_data = get_current_user(token=token, db=db)
 
-    if current_user_data.get("role") != "admin":
+    if current_user_data.role != "admin":
         raise HTTPException(status_code=403, detail="Nie masz uprawnień do usuwania.")
 
     success = delete_car(db, car_id)

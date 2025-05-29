@@ -124,6 +124,14 @@ def get_my_reservations(
 ):
     current_user = get_current_user(token, db)
 
+    reservations = db.query(Reservation)\
+        .options(joinedload(Reservation.car))\
+        .filter(Reservation.user_id == current_user.id)\
+        .all()
+
+    return reservations
+
+
     # Pobierz rezerwacje razem z obiektami car (żeby były dostępne car.brand, car.model itd.)
     reservations = db.query(Reservation)\
         .options(joinedload(Reservation.car))\
